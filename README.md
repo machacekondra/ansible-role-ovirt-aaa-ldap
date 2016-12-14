@@ -49,7 +49,7 @@ This is example of how to deploy IPA with single server:
 
 ```yaml
     - name: Deploy oVirt AAA IPA
-      hosts: ovirt
+      hosts: localhost
       gather_facts: no
       vars:
         aaa_profile_type: ipa
@@ -60,34 +60,33 @@ This is example of how to deploy IPA with single server:
           - ldap.example.com
     
       roles:
-        - aaa-ldap-setup
+        - machacekondra.ovirt-aaa-ldap
 ```
 
 This is example of how to deploy IPA with failover servers:
 
 ```yaml
     - name: Deploy oVirt AAA IPA failover
-      hosts: ovirt
+      hosts: localhost
       gather_facts: no
       vars:
         aaa_profile_type: ipa
         aaa_user: uid=search,cn=users,cn=accounts,dc=example,dc=com
         aaa_password: password
         aaa_profile_name: ipa
-        aaa_profile_name: ipa
         aaa_ldap:
           - ldap1.example.com
           - ldap2.example.com
     
       roles:
-        - aaa-ldap-setup 
+        - machacekondra.ovirt-aaa-ldap
 ```
 
 This is example of how to deploy IPA with SSO:
 
 ```yaml
     - name: Deploy oVirt AAA IPA SSO
-      hosts: ovirt
+      hosts: localhost
       gather_facts: no
       vars:
         aaa_profile_type: ipa
@@ -100,7 +99,7 @@ This is example of how to deploy IPA with SSO:
         aaa_sso_keytab: /path/to/ovirt.keytab
     
       roles:
-        - aaa-ldap-setup 
+        - machacekondra.ovirt-aaa-ldap
 ```
 
 License
