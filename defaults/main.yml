@@ -1,2 +1,3 @@
 ---
 # defaults file for aaa-ldap-setup
+aaa_legacy_api_authn: false
