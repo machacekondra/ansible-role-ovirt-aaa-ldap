@@ -78,7 +78,11 @@
     - restart httpd
 
 - name: Test AAA profile
-  shell: /usr/bin/ovirt-engine-extensions-tool --extension-file=/etc/ovirt-engine/extensions.d/{{ aaa_profile_name }}-authn.properties --extension-file=/etc/ovirt-engine/extensions.d/{{ aaa_profile_name }}-authz.properties aaa search --extension-name={{ aaa_profile_name }}-authz
-  failed_when: "0 != tool_result.rc"
-  changed_when: "1 == 2"
-  register: tool_result
+  command: >
+    /usr/bin/ovirt-engine-extensions-tool
+    --extension-file=/etc/ovirt-engine/extensions.d/{{
+    aaa_profile_name | quote }}-authn.properties
+    --extension-file=/etc/ovirt-engine/extensions.d/{{
+    aaa_profile_name | quote }}-authz.properties aaa search
+    --extension-name={{ aaa_profile_name | quote }}-authz
+  changed_when: false
