@@ -1,3 +1,5 @@
 ---
 # defaults file for aaa-ldap-setup
 aaa_legacy_api_authn: false
+aaa_krb5: false
+aaa_sso_keytab_path: "/etc/httpd/httpd.keytab"

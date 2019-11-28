@@ -32,6 +32,8 @@ Role Variables
 * aaa_base_dn: Custom base DN in case user want to set special.
 * aaa_sso_keytab: Path to keytab which store principal to use SSO. This parameter is required in case SSO should be deployed.
 * aaa_legacy_api_authn: Whether to include `/ovirt-engine/api` among paths that trigger HTTP authentication (was necessary before oVirt 4.0). Disabled by default
+* aaa_sso_keytab: Path to keytab on ansible control machine which stores principal to use for SSO. This parameter or aaa_sso_remote_keytab is required in case SSO should be deployed. Keytab will be copied to `/etc/httpd/http.keytab`
+* aaa_sso_remote_keytab: Path to keytab already present on target machine. Must be accessible and readable by apache.
 
 For example to obtain HTTP keytab for oVirt engine in IPA use following command
 ```bash
