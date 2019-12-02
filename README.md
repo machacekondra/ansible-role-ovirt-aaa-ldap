@@ -1,5 +1,5 @@
-Role Name
-=========
+oVirt AAA LDAP
+==============
 
 This role deploy oVirt AAA LDAP configuration.
 
@@ -31,6 +31,7 @@ Role Variables
 * aaa_ldap: List of ldap servers. If more servers is specified failover policy will be used.
 * aaa_base_dn: Custom base DN in case user want to set special.
 * aaa_sso_keytab: Path to keytab which store principal to use SSO. This parameter is required in case SSO should be deployed.
+* aaa_legacy_api_authn: Whether to include `/ovirt-engine/api` among paths that trigger HTTP authentication (was necessary before oVirt 4.0). Disabled by default
 
 For example to obtain HTTP keytab for oVirt engine in IPA use following command
 ```bash

@@ -1,10 +1,18 @@
 include = <{{ aaa_profile_type }}.properties>
 
+{% if aaa_user is defined %}
 vars.user = {{ aaa_user }}
+{% endif %}
+{% if aaa_password is defined %}
 vars.password = {{ aaa_password }}
+{% endif %}
 
+{% if aaa_user is defined %}
 pool.default.auth.simple.bindDN = ${global:vars.user}
+{% endif %}
+{% if aaa_password is defined %}
 pool.default.auth.simple.password = ${global:vars.password}
+{% endif %}
 {# ----------------- SRV record ----------------- #}
 {% if aaa_profile_type == "ad" %}
 pool.default.serverset.type = srvrecord
