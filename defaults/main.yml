@@ -3,3 +3,4 @@
 aaa_legacy_api_authn: false
 aaa_krb5: false
 aaa_sso_keytab_path: "/etc/httpd/httpd.keytab"
+aaa_ldap_is_domain: "{{ true if aaa_profile_type == 'ad' else false }}"
