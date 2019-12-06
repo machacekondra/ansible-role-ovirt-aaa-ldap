@@ -67,6 +67,15 @@
   notify:
     - restart ovirt-engine
 
+- name: Deploy JAAS
+  template:
+    src: jaas
+    dest: /etc/ovirt-engine/engine.conf.d/99-jaas.conf
+  notify:
+    - restart ovirt-engine
+  when: (ovirt_jaas_ticket_cache_path is defined or
+          ovirt_jaas_keytab_path is defined)
+
 - name: Copy keytab
   copy:
     src: "{{ aaa_sso_keytab }}"

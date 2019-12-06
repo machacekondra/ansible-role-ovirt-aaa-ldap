@@ -34,6 +34,9 @@ Role Variables
 * aaa_legacy_api_authn: Whether to include `/ovirt-engine/api` among paths that trigger HTTP authentication (was necessary before oVirt 4.0). Disabled by default
 * aaa_sso_keytab: Path to keytab on ansible control machine which stores principal to use for SSO. This parameter or aaa_sso_remote_keytab is required in case SSO should be deployed. Keytab will be copied to `/etc/httpd/http.keytab`
 * aaa_sso_remote_keytab: Path to keytab already present on target machine. Must be accessible and readable by apache.
+* aaa_jaas_krb5_conf_path: When ovirt-engine authenticates itself on LDAP via kerberos, it will search kerberos configuration at this path. When not set, AAA will default to `/etc/ovirt-engine/krb5.conf`
+* aaa_jaas_ticket_cache_path: Path to ticket cache when engine queries of LDAP server are to be authenticated by GSSAPI with ticket gained from keytab
+* aaa_jaas_keytab_path: Path to keytab when engine queries of LDAP server are to be authenticated by GSSAPI with ticket gained from keytab
 
 For example to obtain HTTP keytab for oVirt engine in IPA use following command
 ```bash
