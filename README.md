@@ -36,7 +36,7 @@ Role Variables
 * aaa_sso_remote_keytab: Path to keytab already present on target machine. Must be accessible and readable by apache.
 * aaa_jaas_krb5_conf_path: When ovirt-engine authenticates itself on LDAP via kerberos, it will search kerberos configuration at this path. When not set, AAA will default to `/etc/ovirt-engine/krb5.conf`
 * aaa_jaas_ticket_cache_path: Path to ticket cache when engine queries of LDAP server are to be authenticated by GSSAPI with ticket gained from keytab
-* aaa_jaas_keytab_path: Path to keytab when engine queries of LDAP server are to be authenticated by GSSAPI with ticket gained from keytab
+* aaa_jaas_keytab_path: Path to keytab when engine queries of LDAP server are to be authenticated by GSSAPI with ticket gained from keytab. Keytab has to be readable by `ovirt` user
 * aaa_jaas_keytab_principal: Principal that AAA should use to authenticate when querying LDAP server
 
 For example to obtain HTTP keytab for oVirt engine in IPA use following command
