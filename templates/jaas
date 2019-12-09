@@ -8,4 +8,7 @@ AAA_JAAS_TICKET_CACHE_FILE={{ aaa_jaas_ticket_cache_path }}
 {% if aaa_jaas_keytab_path is defined %}
 AAA_JAAS_USE_KEYTAB=true
 AAA_JAAS_KEYTAB_FILE={{ aaa_jaas_keytab_path }}
+{% if aaa_jaas_keytab_principal is defined %}
+AAA_JAAS_PRINCIPAL_NAME={{ aaa_jaas_keytab_principal }}
+{% endif %}
 {% endif %}

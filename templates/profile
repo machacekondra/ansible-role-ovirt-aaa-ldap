@@ -13,6 +13,14 @@ pool.default.auth.simple.bindDN = ${global:vars.user}
 {% if aaa_password is defined %}
 pool.default.auth.simple.password = ${global:vars.password}
 {% endif %}
+{% if aaa_jaas_ticket_cache_path is defined or aaa_jaas_keytab_path is defined %}
+pool.authz.auth.type = gssapi
+pool.authz.auth.gssapi.jAASClientName = oVirtKerbAAA
+{% if aaa_profile_type == 'ad' %}
+pool.gc.auth.type = gssapi
+pool.gc.auth.gssapi.jAASClientName = oVirtKerbAAA
+{% endif %}
+{% endif %}
 {# ----------------- SRV record ----------------- #}
 {% if aaa_ldap_is_domain %}
 pool.default.serverset.type = srvrecord
