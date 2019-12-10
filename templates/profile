@@ -14,7 +14,7 @@ pool.default.auth.simple.bindDN = ${global:vars.user}
 pool.default.auth.simple.password = ${global:vars.password}
 {% endif %}
 {# ----------------- SRV record ----------------- #}
-{% if aaa_profile_type == "ad" %}
+{% if aaa_ldap_is_domain %}
 pool.default.serverset.type = srvrecord
 pool.default.serverset.srvrecord.domain = {{ aaa_ldap[0] }}
 {# -------------------- AD SITE ----------------- #}
@@ -26,13 +26,13 @@ pool.default.serverset.srvrecord.domain-conversion.regex.replacement = {{ aaa_ad
 {% endif %}
 {# --------------------------------------------- #}
 {# ------------------ Single ------------------- #}
-{% if aaa_ldap|length == 1 %}
+{% if not aaa_ldap_is_domain and aaa_ldap|length == 1 %}
 pool.default.serverset.type = single
 pool.default.serverset.single.server = {{ aaa_ldap[0] }}
 {% endif %}
 {# --------------------------------------------- #}
 {# ------------ failover ----------------------- #}
-{% if aaa_ldap|length > 1 %}
+{% if not aaa_ldap_is_domain and aaa_ldap|length > 1 %}
 pool.default.serverset.type = failover
 {% for ldap in aaa_ldap %}
 pool.default.serverset.failover.0{{loop.index}}.server = {{ ldap }}

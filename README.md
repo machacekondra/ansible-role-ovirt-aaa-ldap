@@ -28,10 +28,12 @@ Role Variables
 * aaa_user: User which should be used to search users for auhtorization.
 * aaa_password: Password of the search user.
 * aaa_profile_name: Name of the profile (visible in login page).
-* aaa_ldap: List of ldap servers. If more servers is specified failover policy will be used.
+* aaa_ldap: List of LDAP servers or LDAP domain. When more servers are specified, failover policy will be used.
+* aaa_ldap_is_domain: Whether aaa_ldap is domain with servers discovered via SRV records or not. Default is false (with exception of aaa_profile_type set to `ad`, then default is true)
 * aaa_base_dn: Custom base DN in case user want to set special.
-* aaa_sso_keytab: Path to keytab which store principal to use SSO. This parameter is required in case SSO should be deployed.
 * aaa_legacy_api_authn: Whether to include `/ovirt-engine/api` among paths that trigger HTTP authentication (was necessary before oVirt 4.0). Disabled by default
+* aaa_sso_keytab: Path to keytab on ansible control machine which stores principal to use for SSO. This parameter or aaa_sso_remote_keytab is required in case SSO should be deployed. Keytab will be copied to `/etc/httpd/http.keytab`
+* aaa_sso_remote_keytab: Path to keytab already present on target machine. Must be accessible and readable by apache.
 
 For example to obtain HTTP keytab for oVirt engine in IPA use following command
 ```bash

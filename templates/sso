@@ -8,7 +8,7 @@
     AuthType GSSAPI
     AuthName "Kerberos Login"
 
-    GssapiCredStore keytab:/etc/httpd/httpd.keytab
+    GssapiCredStore keytab:{{ aaa_sso_keytab_path }}
     GssapiUseSessions On
    
     Require valid-user
