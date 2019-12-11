@@ -109,6 +109,44 @@ This is example of how to deploy IPA with SSO:
         - machacekondra.ovirt-aaa-ldap
 ```
 
+This example shows configuration for host that is joined to IPA so global `/etc/krb5.conf` can be used and it uses service keytab for both authentication of LDAP queries and authentication of HTTP traffic
+
+```yaml
+    - name: deploy AAA
+      hosts: engines
+      vars:
+        ipa_domain: ipa.example.com
+        keytab_path: /etc/httpd/httpd.keytab
+        aaa_profile_type: ipa
+        aaa_profile_name: "{{ ipa_domain }}"
+        aaa_ldap:
+          - "{{ ipa_domain }}"
+        aaa_ldap_is_domain: true
+        aaa_sso_remote_keytab: "{{ keytab_path }}"
+        aaa_jaas_krb5_conf_path: /etc/krb5.conf
+        aaa_jaas_keytab_path: "{{ keytab_path }}"
+        aaa_jaas_keytab_principal: "{{ lookup('pipe', 'klist -kt ' +
+          keytab_path + ' | grep \'@\' | awk \'{ print $4 };\' | tail -n1') }}"
+      roles:
+        - machacekondra.ovirt-aaa-ldap
+
+      tasks:
+        - name: allow apache to read the keytab so it can authenticate users
+          file:
+            path: "{{ keytab_path }}"
+            owner: root
+            group: apache
+            mode: '0640'
+
+        - name: allow ovirt to read the keytab so AAA can perform LDAP queries
+          acl:
+            path: "{{ keytab_path }}"
+            entity: ovirt
+            etype: user
+            permissions: r
+            state: present
+```
+
 License
 -------
 
