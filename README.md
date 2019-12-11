@@ -126,7 +126,8 @@ This example shows configuration for host that is joined to IPA so global `/etc/
         aaa_jaas_krb5_conf_path: /etc/krb5.conf
         aaa_jaas_keytab_path: "{{ keytab_path }}"
         aaa_jaas_keytab_principal: "{{ lookup('pipe', 'klist -kt ' +
-          keytab_path + ' | grep \'@\' | awk \'{ print $4 };\' | tail -n1') }}"
+          keytab_path +
+          ' | grep ''@'' | tail -n1 | sed -e s/^.*[[:space:]]// ') }}"
       roles:
         - machacekondra.ovirt-aaa-ldap
 
