@@ -34,6 +34,10 @@ Role Variables
 * aaa_legacy_api_authn: Whether to include `/ovirt-engine/api` among paths that trigger HTTP authentication (was necessary before oVirt 4.0). Disabled by default
 * aaa_sso_keytab: Path to keytab on ansible control machine which stores principal to use for SSO. This parameter or aaa_sso_remote_keytab is required in case SSO should be deployed. Keytab will be copied to `/etc/httpd/http.keytab`
 * aaa_sso_remote_keytab: Path to keytab already present on target machine. Must be accessible and readable by apache.
+* aaa_jaas_krb5_conf_path: When ovirt-engine authenticates itself on LDAP via kerberos, it will search kerberos configuration at this path. When not set, AAA will default to `/etc/ovirt-engine/krb5.conf`
+* aaa_jaas_ticket_cache_path: Path to ticket cache when engine queries of LDAP server are to be authenticated by GSSAPI with ticket gained from keytab
+* aaa_jaas_keytab_path: Path to keytab when engine queries of LDAP server are to be authenticated by GSSAPI with ticket gained from keytab. Keytab has to be readable by `ovirt` user
+* aaa_jaas_keytab_principal: Principal that AAA should use to authenticate when querying LDAP server
 
 For example to obtain HTTP keytab for oVirt engine in IPA use following command
 ```bash
@@ -103,6 +107,45 @@ This is example of how to deploy IPA with SSO:
     
       roles:
         - machacekondra.ovirt-aaa-ldap
+```
+
+This example shows configuration for host that is joined to IPA so global `/etc/krb5.conf` can be used and it uses service keytab for both authentication of LDAP queries and authentication of HTTP traffic
+
+```yaml
+    - name: deploy AAA
+      hosts: engines
+      vars:
+        ipa_domain: ipa.example.com
+        keytab_path: /etc/httpd/httpd.keytab
+        aaa_profile_type: ipa
+        aaa_profile_name: "{{ ipa_domain }}"
+        aaa_ldap:
+          - "{{ ipa_domain }}"
+        aaa_ldap_is_domain: true
+        aaa_sso_remote_keytab: "{{ keytab_path }}"
+        aaa_jaas_krb5_conf_path: /etc/krb5.conf
+        aaa_jaas_keytab_path: "{{ keytab_path }}"
+        aaa_jaas_keytab_principal: "{{ lookup('pipe', 'klist -kt ' +
+          keytab_path +
+          ' | grep ''@'' | tail -n1 | sed -e s/^.*[[:space:]]// ') }}"
+      roles:
+        - machacekondra.ovirt-aaa-ldap
+
+      tasks:
+        - name: allow apache to read the keytab so it can authenticate users
+          file:
+            path: "{{ keytab_path }}"
+            owner: root
+            group: apache
+            mode: '0640'
+
+        - name: allow ovirt to read the keytab so AAA can perform LDAP queries
+          acl:
+            path: "{{ keytab_path }}"
+            entity: ovirt
+            etype: user
+            permissions: r
+            state: present
 ```
 
 License

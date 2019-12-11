@@ -2,6 +2,7 @@
 - name: are we configuring kerberos?
   set_fact:
     aaa_sso_krb5: true
+    aaa_pkgs: "{{ aaa_pkgs | union(aaa_pkgs_krb5) }}"
   when: aaa_sso_keytab is defined or aaa_sso_remote_keytab is defined
 
 - name: assert we don't have aaa_sso_keytab and aaa_sso_remote_keytab together
@@ -17,15 +18,9 @@
   when: aaa_sso_remote_keytab is defined
 
 - name: Install AAA packages
-  yum:
-    name: ovirt-engine-extension-aaa-*
+  package:
+    name: "{{ aaa_pkgs }}"
     state: present
-
-- name: Install mod_auth_gssapi
-  yum:
-    name: mod_auth_gssapi
-    state: present
-  when: aaa_sso_krb5
 
 - name: Deploy profile
   template:
@@ -66,6 +61,15 @@
     dest: /etc/ovirt-engine/extensions.d/{{ aaa_profile_name }}-authz.properties
   notify:
     - restart ovirt-engine
+
+- name: Deploy JAAS
+  template:
+    src: jaas
+    dest: /etc/ovirt-engine/engine.conf.d/99-jaas.conf
+  notify:
+    - restart ovirt-engine
+  when: (ovirt_jaas_ticket_cache_path is defined or
+          ovirt_jaas_keytab_path is defined)
 
 - name: Copy keytab
   copy:
